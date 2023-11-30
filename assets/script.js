@@ -1,3 +1,5 @@
+var divBody = document.getElementById('results')
+
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
 var myHeaders = new Headers();
 myHeaders.append("x-rapidapi-key", apiKey);
@@ -19,6 +21,20 @@ function getApi() {
                 console.log(results[i].fixture.date)
                 console.log(results[i].teams.home.name)
                 console.log(results[i].teams.away.name)
+                console.log(results[i].teams.home.logo)
+                console.log(results[i].teams.away.logo)
+
+
+ var teamNames= document.createElement('h3')
+ teamNames.textContent=results[i].teams.home.name  + " vs " + results[i].teams.away.name
+ teamNames.className += "matches";
+ divBody.append(teamNames)
+
+ var matchDay= document.createElement("p")
+ matchDay.textContent= results[i].fixture.date
+ matchDay.className += "matchDay";
+ divBody.append(matchDay)
+
             }
 
 
@@ -27,3 +43,4 @@ function getApi() {
 }
 
 getApi()
+
