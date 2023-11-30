@@ -1,5 +1,7 @@
 var divBody = document.getElementById('results')
-
+var premierLeagueLi= document.getElementById('premierLeague')
+var laLigaLi= document.getElementById('laLiga')
+var bundesligaLi= document.getElementById('bundesliga')
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
 var myHeaders = new Headers();
 myHeaders.append("x-rapidapi-key", apiKey);
@@ -9,8 +11,9 @@ var requestOptions = {
   method: 'GET',
   headers: myHeaders
 };
-function getApi() {
-    fetch("https://v3.football.api-sports.io/fixtures?league=39&next=10", requestOptions).then(function (response) {
+function getLeague(leagueId) {
+    divBody.innerHTML=''
+    fetch(`https://v3.football.api-sports.io/fixtures?league=${leagueId}&next=10`, requestOptions).then(function (response) {
             return response.json();
         })
         .then(function (data) {
@@ -35,6 +38,15 @@ function getApi() {
  matchDay.className += "matchDay";
  divBody.append(matchDay)
 
+ var homeTeamLogo= document.createElement('img')
+ homeTeamLogo.src= results[i].teams.home.logo
+ homeTeamLogo.className += "homeLogo"
+ divBody.append(homeTeamLogo)
+
+ var awayTeamLogo= document.createElement('img')
+ awayTeamLogo.src= results[i].teams.away.logo
+ awayTeamLogo.className += "awayLogo"
+ divBody.append(awayTeamLogo)
             }
 
 
@@ -42,5 +54,18 @@ function getApi() {
 
 }
 
-getApi()
+premierLeagueLi.addEventListener('click', function(event){
+    event.preventDefault()
+    getLeague(39)
+})
+laLigaLi.addEventListener('click', function(event){
+    event.preventDefault()
+    getLeague(140)
+})
+bundesligaLi.addEventListener('click', function(event){
+    event.preventDefault()
+    getLeague(78)
+})
+
+
 
