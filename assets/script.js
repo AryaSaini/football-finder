@@ -21,12 +21,6 @@ function getLeague(leagueId) {
             console.log(results)
             for (var i = 0; i < results.length; i++) {
 
-                console.log(results[i].fixture.date)
-                console.log(results[i].teams.home.name)
-                console.log(results[i].teams.away.name)
-                console.log(results[i].teams.home.logo)
-                console.log(results[i].teams.away.logo)
-
 
                 var teamNames = document.createElement('h3')
                 teamNames.textContent = results[i].teams.home.name + " vs " + results[i].teams.away.name
@@ -46,7 +40,7 @@ function getLeague(leagueId) {
                 var awayTeamLogo = document.createElement('img')
                 awayTeamLogo.src = results[i].teams.away.logo
                 awayTeamLogo.className += "awayLogo"
-                divBody.append(awayTeamLogo)
+                divBody.append(awayTeamLogo)  
             }
 
 
@@ -57,55 +51,73 @@ function getLeague(leagueId) {
 premierLeagueLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(39)
+    getOdds(soccer_epl)
 })
 laLigaLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(140)
+    soccer_spain_la_liga
 })
 bundesligaLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(78)
+    soccer_germany_bundesliga
 })
 
-function getOdds() {
-    divBody.innerHTML = ''
+function getOdds(oddId) {
     fetch('https://api.the-odds-api.com/v4/sports/soccer_epl/odds?apiKey=34b3c99bfd37616194e6d4c0a3604a37&regions=us&markets=h2h')
-
+    
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            var results = data.results
+
+            console.log(data)
             for (var i = 0; i < 10; i++) {
 
-                console.log(results[i].key[1].key.name[1])
-                console.log(results[i].key[1].key.price[1])
-                console.log(results[i].key[1].key.name[2])
-                console.log(results[i].key[1].key.price[2])
-                console.log(results[i].key[1].key.name[3])
-                console.log(results[i].key[1].key.price[3])
+                console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[0].price)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[1].name)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[1].price)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[2].name)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[2].price)
+
 
                 var homeTeamName = document.createElement('h4')
-                homeTeamNames.textContent = results[i].key[1].key.name[1]
-                
+                homeTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[0].name
+                homeTeamName.className += "homeTeam"
+                divBody.append(homeTeamName)
+
                 var homeTeamOdds = document.createElement('p')
-                homeTeamOdds.textContent = results[i].key[1].key.price[1]
+                homeTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[0].price
+                homeTeamOdds.className += "homeTeamOdds"
+                divBody.append(homeTeamOdds)
 
                 var awayTeamName= document.createElement('h4')
-                awayTeamNames.textContent = results[i].key[1].key.name[2]
+                awayTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[1].name
+                awayTeamName.className += "awayTeam"
+                divBody.append(awayTeamName)
 
-                var awayTeamOdds = document.createElement('p')
-                awayTeamOdds.textContent = results[i].key[1].key.price[2]
+                var awayTeamOdds= document.createElement('p')
+                awayTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[1].price
+                awayTeamOdds.className += "awayTeamOdds"
+                divBody.append(awayTeamOdds)
 
                 var drawName = document.createElement('h4')
-                drawName.textContent = results[i].key[1].key.name[3]
+                drawName.textContent = data[i].bookmakers[0].markets[0].outcomes[2].name
+                drawName.className += "drawTeam"
+                divBody.append(drawName)
 
                 var drawOdds = document.createElement('p')
-                drawOdds.textContent = results[i].key[1].key.price[3]
+                drawOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[2].price
+                drawOdds.className += "drawOdds"
+                divBody.append(drawOdds)
 
 
 
             }
+
         })
 }
+getOdds()
 
