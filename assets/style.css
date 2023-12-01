@@ -21,6 +21,6 @@
     height: 50px;
     text-align: center;
 }
-body {
-    background-color:#C0C0C0;
+.dropdown-item{
+    color:red;
 }
