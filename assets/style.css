@@ -21,6 +21,7 @@
     height: 50px;
     text-align: center;
 }
-.dropdown-item{
-    color:red;
+
+#dropdown-item{
+    color:red !important;
 }
