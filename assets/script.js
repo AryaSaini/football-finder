@@ -1,25 +1,35 @@
+//Selecting the league games div
 var league = document.getElementById('leagueGames')
+//Selecting the odds div from the front-end
 var odds = document.getElementById('odds')
+//Selecting dropdown items
 var premierLeagueLi = document.getElementById('premierLeague')
 var laLigaLi = document.getElementById('laLiga')
 var bundesligaLi = document.getElementById('bundesliga')
+//key used to query the API
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
+//Headers for request JSON
 var myHeaders = new Headers();
+//Adding keys and host name to headers
 myHeaders.append("x-rapidapi-key", apiKey);
 myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
-
+//Defining JSON request as GET to obtain info from servers with correct key/host to query
 var requestOptions = {
     method: 'GET',
     headers: myHeaders
 };
+//Function to work with data obtained from the query
 function getLeague(leagueId) {
     league.innerHTML = ''
+    //Fetch information from API on sports teams
     fetch(`https://v3.football.api-sports.io/fixtures?league=${leagueId}&next=10`, requestOptions).then(function (response) {
         return response.json();
     })
+    //Once data is obtained
         .then(function (data) {
             var results = data.response
             console.log(results)
+            //Add the logos and names of teams onto the HTML page
             for (var i = 0; i < results.length; i++) {
 
 
@@ -48,7 +58,7 @@ function getLeague(leagueId) {
         })
 
 }
-
+//Make dropdowns functional
 premierLeagueLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(39)
@@ -65,17 +75,19 @@ bundesligaLi.addEventListener('click', function (event) {
     getLeague(78)
     getOdds('soccer_germany_bundesliga')
 })
-
+//Allow odds to load onto page
 function getOdds(oddId) {
     odds.innerHTML = ''
+    //Fetch data from the api
     fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=34b3c99bfd37616194e6d4c0a3604a37&regions=us&markets=h2h`)
-
+    //Once data is obtained jsonify it so its usable
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
 
             console.log(data)
+            //Print out the odds of 10 teams next to the team information div
             for (var i = 0; i < 10; i++) {
 
                 console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
@@ -85,7 +97,7 @@ function getOdds(oddId) {
                 console.log(data[i].bookmakers[0].markets[0].outcomes[2].name)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[2].price)
 
-
+                //Populate HTML divs to add onto homepage
                 var homeTeamName = document.createElement('h4')
                 homeTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[0].name
                 homeTeamName.className += "homeTeam"
