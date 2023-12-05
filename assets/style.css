@@ -1,9 +1,9 @@
 .matches {
-    color: red;
+    color: white;
 }
 
 .matchDay {
-    color: blue;
+    color: white;
 }
 
 .main {
@@ -11,7 +11,7 @@
     padding: 15px;
     display: block;
     width: 100%;
-    background-color:#C0C0C0;
+    background-color:black;
     
 }
 
@@ -23,4 +23,9 @@
 }
 .dropdown-item{
     color:red;
+}
+
+#odds {
+color: rgb(8, 236, 69)
+
 }
