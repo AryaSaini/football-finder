@@ -10,6 +10,7 @@ var serieaLi =document.getElementById('serie-a')
 var league1Li =document.getElementById('league-1')
 var mlsLi =document.getElementById('mls')
 var league2Li =document.getElementById('league-2')
+var matches = []
 //key used to query the API
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
 //Headers for request JSON
@@ -22,8 +23,9 @@ var requestOptions = {
     method: 'GET',
     headers: myHeaders
 };
+
 //Function to work with data obtained from the query
-function getLeague(leagueId) {
+function getLeague(leagueId, oddId) {
     league.innerHTML = ''
     //Fetch information from API on sports teams
     fetch(`https://v3.football.api-sports.io/fixtures?league=${leagueId}&next=10`, requestOptions).then(function (response) {
@@ -32,10 +34,23 @@ function getLeague(leagueId) {
     //Once data is obtained
         .then(function (data) {
             var results = data.response
-            console.log(results)
+            console.log({ results })
             //Add the logos and names of teams onto the HTML page
             for (var i = 0; i < results.length; i++) {
 
+                var teamName1 = results[i].teams.home.name
+                var teamName2 = results[i].teams.away.name
+                matches.push({
+                    home: {
+                        name: teamName1,
+                        logo: results[i].teams.home.logo,
+                    },
+                    away: {
+                        name: teamName2,
+                        logo: results[i].teams.home.logo
+                    }
+                })
+                console.log({ teamName1, teamName2 })
 
                 var teamNames = document.createElement('h3')
                 teamNames.textContent = results[i].teams.home.name + " vs " + results[i].teams.away.name
@@ -58,6 +73,7 @@ function getLeague(leagueId) {
                 league.append(awayTeamLogo)
             }
 
+            getOdds(oddId)
 
         })
 
@@ -65,40 +81,39 @@ function getLeague(leagueId) {
 //Make dropdowns functional
 premierLeagueLi.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(39)
-    getOdds('soccer_epl')
+    getLeague(39, 'soccer_epl')
+    //getOdds('soccer_epl')
 })
 laLigaLi.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(140)
-    getOdds('soccer_spain_la_liga')
+    getLeague(140, 'soccer_spain_la_liga')
+    //getOdds('soccer_spain_la_liga')
 
 })
 bundesligaLi.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(78)
-    getOdds('soccer_germany_bundesliga')
+    getLeague(78, 'soccer_germany_bundesliga')
+    //getOdds('soccer_germany_bundesliga')
 
 })
 serieaLi.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(135)
-    getOdds('soccer_italy_serie_a')
+    getLeague(135, 'soccer_italy_serie_a')
+    //getOdds('soccer_italy_serie_a')
 })
 league1Li.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(61)
-    getOdds('soccer_france_ligue_one')
+    getLeague(61, 'soccer_france_ligue_one')
 })
 mlsLi.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(253)
-    getOdds('soccer_usa_mls')
+    getLeague(253, 'soccer_usa_mls')
+    //getOdds('soccer_usa_mls')
 })
 league2Li.addEventListener('click', function (event) {
     event.preventDefault()
-    getLeague(62)
-    getOdds('soccer_france_ligue_two')
+    getLeague(62, 'soccer_france_ligue_two')
+    //getOdds('soccer_france_ligue_two')
 })
 //Allow odds to load onto page
 function getOdds(oddId) {
@@ -111,45 +126,77 @@ function getOdds(oddId) {
         })
         .then(function (data) {
 
-            console.log(data)
-            //Print out the odds of 10 teams next to the team information div
-            for (var i = 0; i < 10; i++) {
+            console.log({ data })
+            var correctOrder = []
+            for ( let i = 0; i < matches.length; i++ ) {
+                const homeTeamName =
+                    data[i].bookmakers[0].markets[0].outcomes[0].name
+                const awayTeamName =
+                    data[i].bookmakers[0].markets[0].outcomes[1].name
 
-                console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[0].price)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[1].name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[1].price)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.price)
+                console.log({ homeTeamName, awayTeamName })
+                //Get the data matching with home and away...
+                const matching = matches.find(m => homeTeamName.startsWith(m.home.name)
+                    && awayTeamName.startsWith(m.away.name))
+                if ( matching ) {
+                    correctOrder.push(data[i])
+                } else {
+                    correctOrder.push({
+                        bookmakers: [{
+                            markets: [
+                                {
+                                    outcomes: [{
+                                        name: "No Home Info"
+                                    },
+                                    {
+                                        name: "No Away Info"
+                                    }
+                                    ]
+                                }
+                            ]
+                        }]
+                    })
+                }
+            }
+            
+            //Print out the odds of 10 teams next to the team information div
+            for (var i = 0; correctOrder.length; i++) {
+                const item = correctOrder[i]
+                console.log(item.bookmakers[0].markets[0].outcomes[0].name)
+                console.log(item.bookmakers[0].markets[0].outcomes[0].price)
+                console.log(item.bookmakers[0].markets[0].outcomes[1].name)
+                console.log(item.bookmakers[0].markets[0].outcomes[1].price)
+                console.log(item.bookmakers[0].markets[0].outcomes[2]?.name)
+                console.log(item.bookmakers[0].markets[0].outcomes[2]?.price)
 
                 //Populate HTML divs to add onto homepage
                 var homeTeamName = document.createElement('h4')
-                homeTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[0].name
+                homeTeamName.textContent = item.bookmakers[0].markets[0].outcomes[0].name
                 homeTeamName.className += "homeTeam"
                 odds.append(homeTeamName)
 
                 var homeTeamOdds = document.createElement('p')
-                homeTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[0].price
+                homeTeamOdds.textContent = item.bookmakers[0].markets[0].outcomes[0].price
                 homeTeamOdds.className += "homeTeamOdds"
                 odds.append(homeTeamOdds)
 
                 var awayTeamName = document.createElement('h4')
-                awayTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[1].name
+                awayTeamName.textContent = item.bookmakers[0].markets[0].outcomes[1].name
                 awayTeamName.className += "awayTeam"
                 odds.append(awayTeamName)
 
                 var awayTeamOdds = document.createElement('p')
-                awayTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[1].price
+                awayTeamOdds.textContent = item.bookmakers[0].markets[0].outcomes[1].price
                 awayTeamOdds.className += "awayTeamOdds"
                 odds.append(awayTeamOdds)
 
                 var drawName = document.createElement('h4')
-                drawName.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.name ?? "No Draw Odds"
+                drawName.textContent = item.bookmakers[0].markets[0].outcomes[2]?.name ?? "No Draw Odds"
                 drawName.className += "drawTeam"
                 odds.append(drawName)
 
                 var drawOdds = document.createElement('p')
-                drawOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.price ?? "No Draw Odds"
+                drawOdds.textContent = item.bookmakers[0].markets[0].outcomes[2]?.price ?? "No Draw Odds"
                 drawOdds.className += "drawOdds"
                 odds.append(drawOdds)
 
