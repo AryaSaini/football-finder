@@ -20,3 +20,7 @@ Once data is obtained jsonify it so its usable
 Print out the odds of 10 teams next to the team information div
 run for loop
 Populate HTML divs to add onto homepage
+
+Css
+display block
+color

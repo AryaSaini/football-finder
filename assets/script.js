@@ -89,8 +89,7 @@ function getOdds(oddId) {
             console.log(data)
             //Print out the odds of 10 teams next to the team information div
             for (var i = 0; i < 10; i++) {
-
-                //console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[0].price)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[1].name)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[1].price)
