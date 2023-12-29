@@ -22,22 +22,10 @@
     text-align: center;
 }
 .dropdown-item{
-    color:white;
-
+    color:red;
 }
 
 #odds {
 color: rgb(8, 236, 69)
 
-}
-
-.dropdown-menu {
-    width: 100%;
-
-}
-
-li {
-background-color: grey;
-border-style: solid;
-border-width: thin;
 }

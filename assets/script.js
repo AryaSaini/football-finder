@@ -6,10 +6,6 @@ var odds = document.getElementById('odds')
 var premierLeagueLi = document.getElementById('premierLeague')
 var laLigaLi = document.getElementById('laLiga')
 var bundesligaLi = document.getElementById('bundesliga')
-var serieaLi =document.getElementById('serie-a')
-var league1Li =document.getElementById('league-1')
-var mlsLi =document.getElementById('mls')
-var league2Li =document.getElementById('league-2')
 //key used to query the API
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
 //Headers for request JSON
@@ -78,33 +74,12 @@ bundesligaLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(78)
     getOdds('soccer_germany_bundesliga')
-
-})
-serieaLi.addEventListener('click', function (event) {
-    event.preventDefault()
-    getLeague(135)
-    getOdds('soccer_italy_serie_a')
-})
-league1Li.addEventListener('click', function (event) {
-    event.preventDefault()
-    getLeague(61)
-    getOdds('soccer_france_ligue_one')
-})
-mlsLi.addEventListener('click', function (event) {
-    event.preventDefault()
-    getLeague(253)
-    getOdds('soccer_usa_mls')
-})
-league2Li.addEventListener('click', function (event) {
-    event.preventDefault()
-    getLeague(62)
-    getOdds('soccer_france_ligue_two')
 })
 //Allow odds to load onto page
 function getOdds(oddId) {
     odds.innerHTML = ''
     //Fetch data from the api
-    fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=34b3c99bfd37616194e6d4c0a3604a37&regions=us&markets=h2h`)
+    fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=a6d86e4be11611d0c6bdb1424a24eefe&regions=us&markets=h2h`)
     //Once data is obtained jsonify it so its usable
         .then(function (response) {
             return response.json();
@@ -115,12 +90,12 @@ function getOdds(oddId) {
             //Print out the odds of 10 teams next to the team information div
             for (var i = 0; i < 10; i++) {
 
-                console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
+                //console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[0].price)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[1].name)
                 console.log(data[i].bookmakers[0].markets[0].outcomes[1].price)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.price)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[2].name)
+                console.log(data[i].bookmakers[0].markets[0].outcomes[2].price)
 
                 //Populate HTML divs to add onto homepage
                 var homeTeamName = document.createElement('h4')
@@ -144,12 +119,12 @@ function getOdds(oddId) {
                 odds.append(awayTeamOdds)
 
                 var drawName = document.createElement('h4')
-                drawName.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.name ?? "No Draw Odds"
+                drawName.textContent = data[i].bookmakers[0].markets[0].outcomes[2].name
                 drawName.className += "drawTeam"
                 odds.append(drawName)
 
                 var drawOdds = document.createElement('p')
-                drawOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.price ?? "No Draw Odds"
+                drawOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[2].price
                 drawOdds.className += "drawOdds"
                 odds.append(drawOdds)
 
@@ -159,4 +134,3 @@ function getOdds(oddId) {
 
         })
 }
-
