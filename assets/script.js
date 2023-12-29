@@ -79,7 +79,7 @@ bundesligaLi.addEventListener('click', function (event) {
 function getOdds(oddId) {
     odds.innerHTML = ''
     //Fetch data from the api
-    fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=a6d86e4be11611d0c6bdb1424a24eefe&regions=us&markets=h2h`)
+    fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=34b3c99bfd37616194e6d4c0a3604a37&regions=us&markets=h2h`)
     //Once data is obtained jsonify it so its usable
         .then(function (response) {
             return response.json();
