@@ -11,13 +11,22 @@
 </head>
 
 <body>
+
+    <div>
+        <h1 class="title">Soccer Matches & Odds</h1>
+    </div>
+
     <div class="main">
+
         <div id="leagueDropdown" class="dropdown">
+
             <button class="btn btn-secondary dropdown-toggle block" type="button" id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Leagues
             </button>
+
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
                 <li id="premierLeague"><a class="dropdown-item" href="#">Premier League</a></li>
                 <li id="laLiga"><a class="dropdown-item" href="#">La Liga</a></li>
                 <li id="bundesliga"><a class="dropdown-item" href="#">Bundesliga</a></li>
@@ -25,15 +34,14 @@
                 <li id="league-1"><a class="dropdown-item" href="#">League 1</a></li>
                 <li id="mls"><a class="dropdown-item" href="#">MLS</a></li>
                 <li id="league-2"><a class="dropdown-item" href="#">League 2</a></li>
-
             </ul>
         </div>
-        <div class="row">
-            <div class="col-6" id="leagueGames">
+        <div class="row results">
+            <div class="col-lg-6 col-md-6 col-sm-12" id="leagueGames">
 
 
             </div>
-            <div class= "col-6" id="odds">
+            <div class= "col-lg-6 col-md-6 col-sm-12" id="odds">
 
             </div>
         </div>
@@ -43,8 +51,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="./assets/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
-        integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.8/dayjs.min.js"></script>
 </body>
 
 </html>

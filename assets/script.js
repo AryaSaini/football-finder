@@ -1,68 +1,63 @@
-//Selecting the league games div
 var league = document.getElementById('leagueGames')
-//Selecting the odds div from the front-end
 var odds = document.getElementById('odds')
-//Selecting dropdown items
 var premierLeagueLi = document.getElementById('premierLeague')
 var laLigaLi = document.getElementById('laLiga')
 var bundesligaLi = document.getElementById('bundesliga')
-var serieaLi =document.getElementById('serie-a')
-var league1Li =document.getElementById('league-1')
-var mlsLi =document.getElementById('mls')
-var league2Li =document.getElementById('league-2')
-//key used to query the API
+var serieaLi = document.getElementById('serie-a')
+var league1Li = document.getElementById('league-1')
+var mlsLi = document.getElementById('mls')
+var league2Li = document.getElementById('league-2')
 var apiKey = "a6d86e4be11611d0c6bdb1424a24eefe"
-//Headers for request JSON
 var myHeaders = new Headers();
-//Adding keys and host name to headers
+
 myHeaders.append("x-rapidapi-key", apiKey);
 myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
-//Defining JSON request as GET to obtain info from servers with correct key/host to query
+
 var requestOptions = {
     method: 'GET',
     headers: myHeaders
 };
-//Function to work with data obtained from the query
+
 function getLeague(leagueId) {
     league.innerHTML = ''
-    //Fetch information from API on sports teams
+
     fetch(`https://v3.football.api-sports.io/fixtures?league=${leagueId}&next=10`, requestOptions).then(function (response) {
         return response.json();
     })
-    //Once data is obtained
+
         .then(function (data) {
             var results = data.response
             console.log(results)
-            //Add the logos and names of teams onto the HTML page
+
             for (var i = 0; i < results.length; i++) {
 
+                var matchCard = document.createElement('div');
+                matchCard.className += 'matchCard';
+                league.appendChild(matchCard);
 
                 var teamNames = document.createElement('h3')
                 teamNames.textContent = results[i].teams.home.name + " vs " + results[i].teams.away.name
                 teamNames.className += "matches";
-                league.append(teamNames)
+                matchCard.append(teamNames)
 
                 var matchDay = document.createElement("p")
-                matchDay.textContent = results[i].fixture.date
+                var matchDate = dayjs(results[i].fixture.date)
+                matchDay.textContent = matchDate.format('MMMM D, YYYY h:mm A')
                 matchDay.className += "matchDay";
-                league.append(matchDay)
+                matchCard.append(matchDay)
 
                 var homeTeamLogo = document.createElement('img')
                 homeTeamLogo.src = results[i].teams.home.logo
                 homeTeamLogo.className += "homeLogo"
-                league.append(homeTeamLogo)
+                matchCard.append(homeTeamLogo)
 
                 var awayTeamLogo = document.createElement('img')
                 awayTeamLogo.src = results[i].teams.away.logo
                 awayTeamLogo.className += "awayLogo"
-                league.append(awayTeamLogo)
+                matchCard.append(awayTeamLogo)
             }
-
-
         })
-
 }
-//Make dropdowns functional
 premierLeagueLi.addEventListener('click', function (event) {
     event.preventDefault()
     getLeague(39)
@@ -100,63 +95,62 @@ league2Li.addEventListener('click', function (event) {
     getLeague(62)
     getOdds('soccer_france_ligue_two')
 })
-//Allow odds to load onto page
+
 function getOdds(oddId) {
     odds.innerHTML = ''
-    //Fetch data from the api
     fetch(`https://api.the-odds-api.com/v4/sports/${oddId}/odds?apiKey=34b3c99bfd37616194e6d4c0a3604a37&regions=us&markets=h2h`)
-    //Once data is obtained jsonify it so its usable
+
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-
             console.log(data)
-            //Print out the odds of 10 teams next to the team information div
+
             for (var i = 0; i < 10; i++) {
 
-                console.log(data[i].bookmakers[0].markets[0].outcomes[0].name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[0].price)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[1].name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[1].price)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.name)
-                console.log(data[i].bookmakers[0].markets[0].outcomes[2]?.price)
+                var oddsCard = document.createElement('div');
+                oddsCard.className += 'oddsCard';
+                odds.appendChild(oddsCard);
 
-                //Populate HTML divs to add onto homepage
+
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[0].name)
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[0].price)
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[1].name)
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[1].price)
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[2]?.name)
+                console.log(data[i]?.bookmakers[0].markets[0].outcomes[2]?.price)
+
                 var homeTeamName = document.createElement('h4')
-                homeTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[0].name
+                homeTeamName.textContent = data[i]?.bookmakers[0].markets[0].outcomes[0].name ?? "No Bookmaker"
                 homeTeamName.className += "homeTeam"
-                odds.append(homeTeamName)
+                oddsCard.append(homeTeamName)
 
                 var homeTeamOdds = document.createElement('p')
-                homeTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[0].price
+                homeTeamOdds.textContent = data[i]?.bookmakers[0].markets[0].outcomes[0].price ?? "No Bookmaker"
                 homeTeamOdds.className += "homeTeamOdds"
-                odds.append(homeTeamOdds)
+                oddsCard.append(homeTeamOdds)
 
                 var awayTeamName = document.createElement('h4')
-                awayTeamName.textContent = data[i].bookmakers[0].markets[0].outcomes[1].name
+                awayTeamName.textContent = data[i]?.bookmakers[0].markets[0].outcomes[1].name ?? "No Bookmaker"
                 awayTeamName.className += "awayTeam"
-                odds.append(awayTeamName)
+                oddsCard.append(awayTeamName)
 
                 var awayTeamOdds = document.createElement('p')
-                awayTeamOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[1].price
+                awayTeamOdds.textContent = data[i]?.bookmakers[0].markets[0].outcomes[1].price ?? "No Bookmaker"
                 awayTeamOdds.className += "awayTeamOdds"
-                odds.append(awayTeamOdds)
+                oddsCard.append(awayTeamOdds)
 
                 var drawName = document.createElement('h4')
-                drawName.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.name ?? "No Draw Odds"
+                drawName.textContent = data[i]?.bookmakers[0].markets[0].outcomes[2]?.name ?? "No Draw Odds"
                 drawName.className += "drawTeam"
-                odds.append(drawName)
+                oddsCard.append(drawName)
 
                 var drawOdds = document.createElement('p')
-                drawOdds.textContent = data[i].bookmakers[0].markets[0].outcomes[2]?.price ?? "No Draw Odds"
+                drawOdds.textContent = data[i]?.bookmakers[0].markets[0].outcomes[2]?.price ?? "No Draw Odds"
                 drawOdds.className += "drawOdds"
-                odds.append(drawOdds)
-
-
-
+                oddsCard.append(drawOdds)
             }
-
         })
 }
+
 
